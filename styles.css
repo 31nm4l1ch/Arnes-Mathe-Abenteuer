@@ -32,6 +32,13 @@ body{
 .start-card{ background:var(--paper); border-radius:28px; box-shadow:var(--card-shadow);
   padding:26px 22px; width:100%; max-width:460px; text-align:center; }
 .start-title{ font-size:clamp(1.7rem,7vw,2.5rem); font-weight:800; line-height:1.1; margin-bottom:6px; }
+.start-photo-row{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin:12px auto 14px;
+  max-width:330px; }
+.start-photo-row img{ width:100%; height:92px; object-fit:contain; background:#eef7ff; border-radius:14px;
+  box-shadow:0 4px 12px rgba(31,58,86,.18); border:3px solid #fff; }
+.start-photo-row img:first-child{ transform:rotate(-1.5deg); }
+.start-photo-row img:nth-child(2){ transform:rotate(1.2deg); }
+.start-photo-row img:nth-child(3){ transform:rotate(-.6deg); }
 .start-sub{ color:var(--muted); font-weight:700; margin-bottom:16px; }
 .mode-btn{ display:flex; flex-direction:column; align-items:center; gap:2px; width:100%; border:none;
   cursor:pointer; font-family:inherit; color:#fff; border-radius:20px; padding:16px 14px; margin:10px 0;
@@ -66,6 +73,10 @@ header{ display:flex; flex-direction:column; gap:8px; align-items:center; text-a
 .icon-btn{ border:none; background:#fff; border-radius:999px; width:38px; height:34px; font-size:1.05rem;
   cursor:pointer; box-shadow:0 3px 10px rgba(31,58,86,.12); }
 .icon-btn:active{ transform:translateY(1px); }
+.menu-home-btn{ border:none; background:#fff; border-radius:999px; min-height:34px; padding:5px 12px;
+  font-family:inherit; color:var(--ink); font-size:.95rem; font-weight:800; cursor:pointer;
+  box-shadow:0 3px 10px rgba(31,58,86,.12); white-space:nowrap; }
+.menu-home-btn:active{ transform:translateY(1px); }
 
 /* Fortschrittsbalken */
 .levelbar{ height:14px; background:#fff; border-radius:999px; margin:14px 4px 4px; overflow:hidden;
@@ -145,6 +156,10 @@ header{ display:flex; flex-direction:column; gap:8px; align-items:center; text-a
 .map-text{ min-width:0; display:grid; gap:1px; text-align:left; line-height:1.1; }
 .map-text b{ font-size:.95rem; }
 .map-text span{ color:var(--muted); font-size:.8rem; font-weight:700; overflow-wrap:anywhere; }
+.map-photo-card{ margin-top:12px; overflow:hidden; border-radius:16px; border:3px solid #fff;
+  box-shadow:0 4px 14px rgba(31,58,86,.16); transition:opacity .2s ease, transform .2s ease; }
+.map-photo-card img{ display:block; width:100%; height:170px; object-fit:contain; background:#eef7ff; }
+.wrap.explaining .map-photo-card{ opacity:0; transform:translateY(4px); pointer-events:none; }
 
 /* ===== Rückmeldung / Erklärung ===== */
 .mascot{ font-size:3rem; line-height:1; margin:2px 0 8px; }

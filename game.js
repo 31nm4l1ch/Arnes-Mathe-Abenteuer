@@ -396,6 +396,7 @@ function buildHelpPhases(p, ctx){
    ========================================================= */
 function startExplanation(p){
   helpAdvance = null;
+  gameWrap.classList.add('explaining');
   quizCard.classList.add('hidden');
   feedbackCard.classList.remove('hidden');
   vizResult.classList.remove('show'); vizResult.textContent = '';
@@ -544,6 +545,7 @@ async function vizRemove(ctx, grp){
 function nextProblem(){
   state.vizRun++; currentAdvance = null; helpAdvance = null;
   state.busy = false; state.timerPaused = false;
+  gameWrap.classList.remove('explaining');
   feedbackCard.classList.add('hidden');
   quizCard.classList.remove('hidden');
   vizResult.classList.remove('show'); vizResult.textContent = '';

@@ -16,6 +16,11 @@
   <div id="startScreen" class="screen">
     <div class="start-card">
       <div class="start-title">🦭 Arnes<br>Mathe-Abenteuer</div>
+      <div class="start-photo-row" aria-hidden="true">
+        <img src="assets/arne-action.jpg" alt="">
+        <img src="assets/arne-forest.jpg" alt="">
+        <img src="assets/arne-tree.jpg" alt="">
+      </div>
       <div class="start-sub">Wähle einen Modus:</div>
 
       <button class="mode-btn m-practice" data-mode="practice">
@@ -49,7 +54,7 @@
         <span class="chip" id="modeChip" title="Modus">🏆 Stufe 1</span>
         <span class="chip" title="Serie ohne Fehler">🔥 <span id="streak">0</span></span>
         <button id="muteBtn" class="icon-btn" title="Ton an/aus">🔊</button>
-        <button id="homeBtn" class="icon-btn" title="Zurück zum Menü">🏠</button>
+        <button id="homeBtn" class="menu-home-btn" title="Zurück zum Hauptmenü">🏠 Menü</button>
       </div>
     </header>
 
@@ -109,6 +114,9 @@
         </div>
         <div id="mapSummary" class="map-summary"></div>
         <div id="mapPath" class="map-path"></div>
+        <div class="map-photo-card" aria-hidden="true">
+          <img src="assets/arne-tree.jpg" alt="">
+        </div>
       </aside>
     </div>
 
