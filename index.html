@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>🦭 Arnes Mathe-Abenteuer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="banner" class="banner hidden"></div>
+
+  <!-- ===== Startbildschirm: Modus wählen ===== -->
+  <div id="startScreen" class="screen">
+    <div class="start-card">
+      <div class="start-title">🦭 Arnes<br>Mathe-Abenteuer</div>
+      <div class="start-sub">Wähle einen Modus:</div>
+
+      <button class="mode-btn m-practice" data-mode="practice">
+        <b>🧮 Üben</b><small>ohne Ende, ganz entspannt</small>
+      </button>
+      <button class="mode-btn m-time" data-mode="time">
+        <b>⏱️ Zeit-Wettlauf</b><small>2 Minuten – so viele wie möglich</small>
+      </button>
+      <button class="mode-btn m-count" data-mode="count">
+        <b>🎯 Aufgaben schaffen</b><small>schaffe <span id="countLabel">10</span> Aufgaben</small>
+      </button>
+
+      <div class="count-choice">
+        <span>Wie viele?</span>
+        <button data-count="5">5</button>
+        <button data-count="10" class="sel">10</button>
+        <button data-count="20">20</button>
+      </div>
+
+      <div id="startBest" class="start-best"></div>
+    </div>
+  </div>
+
+  <!-- ===== Spielbildschirm ===== -->
+  <div id="game" class="wrap hidden">
+    <header>
+      <div class="brand">🦭 Arnes Mathe-Abenteuer</div>
+      <div class="stats">
+        <span class="chip" title="Punkte">⭐ <span id="score">0</span></span>
+        <span class="chip lives" id="lives" title="Leben">❤️❤️❤️</span>
+        <span class="chip" id="modeChip" title="Modus">🏆 Stufe 1</span>
+        <span class="chip" title="Serie ohne Fehler">🔥 <span id="streak">0</span></span>
+        <button id="muteBtn" class="icon-btn" title="Ton an/aus">🔊</button>
+        <button id="homeBtn" class="icon-btn" title="Zurück zum Menü">🏠</button>
+      </div>
+    </header>
+
+    <div class="levelbar"><div id="levelFill" class="levelfill"></div></div>
+    <div id="levelInfo" class="levelinfo"></div>
+
+    <div class="play-layout">
+      <main class="play-main">
+        <section id="quizCard" class="card">
+          <div class="question">
+            <span id="questionMath"></span>
+            <span id="answerBox" class="answerbox empty">?</span>
+          </div>
+
+          <div id="helpArea" class="help-area hidden">
+            <div id="helpQuestion" class="mini-question"></div>
+            <div id="helpCaption" class="help-caption"></div>
+            <div id="helpCubes" class="cubes"></div>
+            <button id="helpPhaseBtn" class="help-next-btn hidden">Weiter →</button>
+          </div>
+
+          <div id="keypad" class="keypad">
+            <button class="key" data-d="1">1</button>
+            <button class="key" data-d="2">2</button>
+            <button class="key" data-d="3">3</button>
+            <button class="key" data-d="4">4</button>
+            <button class="key" data-d="5">5</button>
+            <button class="key" data-d="6">6</button>
+            <button class="key" data-d="7">7</button>
+            <button class="key" data-d="8">8</button>
+            <button class="key" data-d="9">9</button>
+            <button class="key key-back" data-act="back" title="Löschen">⌫</button>
+            <button class="key" data-d="0">0</button>
+            <button class="key key-check" data-act="check" title="Prüfen">✓</button>
+          </div>
+
+          <button id="helpBtn" class="help-btn">🤔 Hilf mir (ohne Punkt)</button>
+        </section>
+
+        <section id="feedbackCard" class="card hidden">
+          <div class="mascot" id="mascot">🦭</div>
+          <div id="explainQuestion" class="mini-question"></div>
+          <div id="feedbackMsg" class="feedback-msg"></div>
+          <div id="vizCaption" class="viz-caption"></div>
+          <div id="cubes" class="cubes"></div>
+          <div id="vizResult" class="viz-result"></div>
+          <div id="phaseInfo" class="phase-info"></div>
+          <button id="phaseBtn" class="big-btn">Weiter →</button>
+        </section>
+      </main>
+
+      <aside id="levelMap" class="level-map" aria-label="Stufenkarte">
+        <div class="map-head">
+          <div class="map-title">Stufenkarte</div>
+          <div id="mapDifficulty" class="map-pill">leicht</div>
+        </div>
+        <div id="mapSummary" class="map-summary"></div>
+        <div id="mapPath" class="map-path"></div>
+      </aside>
+    </div>
+
+    <footer class="hint">Tipp: Tippe die Zahlen oder nutze die Tastatur (Zahlen, ⌫, Enter).</footer>
+  </div>
+
+  <!-- ===== Endbildschirm ===== -->
+  <div id="endScreen" class="screen hidden">
+    <div class="start-card">
+      <div id="endTitle" class="start-title"></div>
+      <div id="endStats" class="end-stats"></div>
+      <button id="againBtn" class="mode-btn"><b>🔁 Nochmal</b></button>
+      <button id="menuBtn" class="mode-btn"><b>🏠 Menü</b></button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
