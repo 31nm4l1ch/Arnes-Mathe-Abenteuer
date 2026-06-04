@@ -1,6 +1,6 @@
 # 🦭 Arnes Mathe-Abenteuer
 
-Ein kleines Rechenspiel für die 2. Klasse. Ziel: mit **sehr einfachen**
+Ein kleines Rechenspiel für die 1. Klasse. Ziel: mit **sehr einfachen**
 Plus- und Minus-Aufgaben Punkte sammeln. Die Aufgaben werden langsam schwerer.
 
 ## Spielen
