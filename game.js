@@ -2,17 +2,18 @@
 
 /* =========================================================
    Arnes Mathe-Abenteuer
-   Rechenspiel für die 2. Klasse: + und − mit kleinen Zahlen,
+   Rechenspiel für die 1. Klasse: + und − mit kleinen Zahlen,
    immer schwerer werdend, mit Würfel-Anschauung, Leben,
    drei Spielmodi und einem "Hilf mir"-Knopf.
    ========================================================= */
 
 /* ---- Einstellungen (zum Anpassen) ---- */
 const CORRECT_PER_LEVEL = 3;   // Richtige Aufgaben pro Stufe
-const SUB_FROM_LEVEL    = 3;   // Ab hier Minus
-const SEQ_FROM_LEVEL    = 8;   // Ab hier Zahlenreihen
-const TRIPLE_FROM_LEVEL = 15;  // Ab hier drei Zahlen
-const MAX_BY_LEVEL = [10, 12, 10, 20, 30, 40, 50, 50, 60, 70, 80, 90, 100, 100, 100];
+const BOND_TO_TEN_LEVEL = 3;   // Verliebte Zahlen: 7 + ? = 10
+const SUB_FROM_LEVEL    = 4;   // Ab hier Minus
+const SEQ_FROM_LEVEL    = 12;  // Ab hier Zahlenreihen
+const TRIPLE_FROM_LEVEL = 17;  // Ab hier drei Zahlen
+const MAX_BY_LEVEL = [5, 10, 10, 10, 10, 20, 20, 20, 20, 30, 40, 50, 50, 60, 70, 80, 90, 100, 100, 100];
 const MAX_LIVES   = 3;         // So viele Leben gibt es höchstens
 const LIFE_EVERY  = 3;         // Alle X Stufen ein Leben dazu
 const TIME_SECONDS = 120;      // Zeitmodus: 2 Minuten
@@ -42,7 +43,7 @@ const startScreen = $('startScreen'), endScreen = $('endScreen'), gameWrap = $('
 const scoreEl = $('score'), livesEl = $('lives'), modeChip = $('modeChip'), streakEl = $('streak');
 const muteBtn = $('muteBtn'), homeBtn = $('homeBtn');
 const levelFill = $('levelFill'), levelInfo = $('levelInfo');
-const quizCard = $('quizCard'), questionMath = $('questionMath'), answerBox = $('answerBox');
+const quizCard = $('quizCard'), questionMath = $('questionMath'), answerBox = $('answerBox'), questionSuffix = $('questionSuffix');
 const keypad = $('keypad');
 const helpArea = $('helpArea'), helpQuestion = $('helpQuestion'), helpCaption = $('helpCaption'), helpCubes = $('helpCubes'), helpBtn = $('helpBtn'), helpPhaseBtn = $('helpPhaseBtn');
 const feedbackCard = $('feedbackCard'), mascot = $('mascot'), feedbackMsg = $('feedbackMsg');
@@ -122,14 +123,16 @@ function maxForLevel(l){ return l <= MAX_BY_LEVEL.length ? MAX_BY_LEVEL[l - 1] :
 // Mindestgrößen, damit späte Aufgaben nicht trivial werden (kein 27-0, kein 3+2 bei Stufe 6 ...)
 function bandFor(level){
   const M = maxForLevel(level);
-  const bMin = level <= 2 ? 0 : level === SUB_FROM_LEVEL ? 1 : Math.min(level - 1, Math.floor(M * 0.4)); // zweite Zahl
-  let aMin = Math.min(Math.floor(M * 0.4), M - Math.max(1, bMin) - 1);      // erste Zahl
+  if (M <= 10) return { M, bMin: level === 1 ? 0 : 1, aMin: 1 };
+  if (M <= 20) return { M, bMin: 1, aMin: 1 };
+  const bMin = Math.min(level - 1, Math.floor(M * 0.35)); // zweite Zahl
+  let aMin = Math.min(Math.floor(M * 0.3), M - Math.max(1, bMin) - 1);      // erste Zahl
   return { M, bMin, aMin: Math.max(0, aMin) };
 }
 
 function genAdd(level){
   const { M, bMin, aMin } = bandFor(level);
-  const bLo = level <= 2 ? 0 : Math.max(1, bMin);   // "+0" nur in Stufe 1–2
+  const bLo = level === 1 ? 0 : Math.max(1, bMin);   // "+0" nur ganz am Anfang
   const aHi = M - bLo;
   const a = randInt(Math.min(aMin, aHi), aHi);
   const b = randInt(bLo, M - a);
@@ -143,6 +146,12 @@ function genSub(level){
   const b = randInt(bLo, a);
   return { type: 'sub', prefix: `${a} − ${b} =`, answer: a - b,
     viz: { start: a, steps: [{ op: '-', n: b }], total: a - b, meta: { a, b } } };
+}
+function genBondToTen(){
+  const known = randInt(1, 9);
+  const partner = 10 - known;
+  return { type: 'add', subtype: 'bond10', prefix: `${known} +`, suffix: '= 10', answer: partner,
+    viz: { start: known, steps: [{ op: '+', n: partner }], total: 10, meta: { a: known, b: partner } } };
 }
 function genTriple(level){
   const M = maxForLevel(level);
@@ -182,15 +191,27 @@ function weightedPick(items, weights){
   return items[items.length - 1];
 }
 function generateProblem(level){
-  const types = ['add'], weights = [3];
-  if (level === SUB_FROM_LEVEL)   { types[0] = 'sub';     weights[0] = 4; }
-  else if (level > SUB_FROM_LEVEL){ types.push('sub');    weights.push(3); }
+  let types = ['add'], weights = [3];
+  if (level === BOND_TO_TEN_LEVEL){
+    types = ['bond']; weights = [5];
+  } else if (level === SUB_FROM_LEVEL){
+    types = ['sub']; weights = [4];
+  } else if (level === 5){
+    types = ['add', 'sub']; weights = [3, 3];
+  } else if (level === 6){
+    types = ['add']; weights = [4];
+  } else if (level === 7){
+    types = ['sub']; weights = [4];
+  } else if (level >= 8){
+    types = ['add', 'sub']; weights = [3, 3];
+  }
+  if (level === 9){ types.push('bond'); weights.push(3); }
   if (level >= SEQ_FROM_LEVEL)    { types.push('seq');    weights.push(2); }
   if (level >= TRIPLE_FROM_LEVEL) { types.push('triple'); weights.push(3); }
   let p;
   for (let tries = 0; tries < 12; tries++){
     const t = weightedPick(types, weights);
-    p = t === 'add' ? genAdd(level) : t === 'sub' ? genSub(level)
+    p = t === 'add' ? genAdd(level) : t === 'sub' ? genSub(level) : t === 'bond' ? genBondToTen()
       : t === 'seq' ? genSeq() : genTriple(level);
     if (p.prefix !== state.lastPrefix) break;
   }
@@ -203,6 +224,7 @@ function generateProblem(level){
    ========================================================= */
 function renderQuestion(){
   questionMath.textContent = state.current.prefix;
+  questionSuffix.textContent = state.current.suffix || '';
   const prompt = problemPrompt(state.current);
   helpQuestion.textContent = prompt;
   explainQuestion.textContent = prompt;
@@ -210,7 +232,9 @@ function renderQuestion(){
   renderAnswerBox();
 }
 function problemPrompt(p){
-  return p ? p.prefix.replace(/\s+$/, '') + ' ?' : '';
+  if (!p) return '';
+  if (p.suffix) return p.prefix.replace(/\s+$/, '') + ' ? ' + p.suffix.trim();
+  return p.prefix.replace(/\s+$/, '') + ' ?';
 }
 function renderAnswerBox(){
   answerBox.textContent = state.input === '' ? '?' : state.input;
@@ -538,6 +562,9 @@ function levelUp(){
   playLevelUp();
   let extra = '';
   if (state.level % LIFE_EVERY === 0 && state.lives < MAX_LIVES){ state.lives++; extra += ' ❤️ +1 Leben!'; }
+  if (state.level === BOND_TO_TEN_LEVEL) extra += ' Neu: verliebte Zahlen! 💕';
+  if (state.level === SUB_FROM_LEVEL)    extra += ' Neu: Minus bis 10! ➖';
+  if (state.level === 6)                 extra += ' Neu: bis 20! 🔟';
   if (state.level === SEQ_FROM_LEVEL)    extra += ' Neu: Zahlenreihen! 🔢';
   if (state.level === TRIPLE_FROM_LEVEL) extra += ' Neu: drei Zahlen! 🎲';
   showBanner(`Stufe ${state.level} erreicht! 🎉${extra}`);
@@ -576,8 +603,16 @@ function levelDetails(level){
   const max = maxForLevel(level);
   if (level >= TRIPLE_FROM_LEVEL) return { icon: '🎲', label: '3 Zahlen', difficulty: 'knifflig', className: 'hard', detail: 'bis ' + max };
   if (level >= SEQ_FROM_LEVEL) return { icon: '🔢', label: 'Reihen', difficulty: 'mittel+', className: 'medium', detail: 'bis 100' };
-  if (level === SUB_FROM_LEVEL) return { icon: '➖', label: 'Minus', difficulty: 'leicht+', className: 'easy', detail: 'bis ' + max };
-  if (level >= SUB_FROM_LEVEL) return { icon: '➖', label: 'Plus & Minus', difficulty: 'mittel', className: 'medium', detail: 'bis ' + max };
+  if (level === 1) return { icon: '➕', label: 'Plus', difficulty: 'leicht', className: 'easy', detail: 'bis 5' };
+  if (level === 2) return { icon: '➕', label: 'Plus', difficulty: 'leicht', className: 'easy', detail: 'bis 10' };
+  if (level === BOND_TO_TEN_LEVEL) return { icon: '💕', label: 'Verliebte Zahlen', difficulty: 'leicht+', className: 'easy', detail: 'zur 10' };
+  if (level === SUB_FROM_LEVEL) return { icon: '➖', label: 'Minus', difficulty: 'leicht+', className: 'easy', detail: 'bis 10' };
+  if (level === 5) return { icon: '↔', label: 'Plus & Minus', difficulty: 'leicht+', className: 'easy', detail: 'bis 10' };
+  if (level === 6) return { icon: '➕', label: 'Plus', difficulty: 'mittel', className: 'medium', detail: 'bis 20' };
+  if (level === 7) return { icon: '➖', label: 'Minus', difficulty: 'mittel', className: 'medium', detail: 'bis 20' };
+  if (level === 8) return { icon: '↔', label: 'Plus & Minus', difficulty: 'mittel', className: 'medium', detail: 'bis 20' };
+  if (level === 9) return { icon: '💕', label: 'Zehnerfreunde', difficulty: 'mittel', className: 'medium', detail: 'Wiederholung' };
+  if (level >= SUB_FROM_LEVEL) return { icon: '↔', label: 'Plus & Minus', difficulty: 'mittel', className: 'medium', detail: 'bis ' + max };
   return { icon: '➕', label: 'Plus', difficulty: 'leicht', className: 'easy', detail: 'bis ' + max };
 }
 function renderLevelMap(){
@@ -593,7 +628,7 @@ function renderLevelMap(){
     const item = document.createElement('div');
     const info = levelDetails(level);
     item.className = 'map-node ' + (level < state.level ? 'done' : level === state.level ? 'current ' + info.className : 'locked');
-    if (level === SUB_FROM_LEVEL || level === SEQ_FROM_LEVEL || level === TRIPLE_FROM_LEVEL) item.classList.add('milestone');
+    if (level === BOND_TO_TEN_LEVEL || level === SUB_FROM_LEVEL || level === 6 || level === SEQ_FROM_LEVEL || level === TRIPLE_FROM_LEVEL) item.classList.add('milestone');
 
     const badge = document.createElement('div');
     badge.className = 'map-badge';

@@ -13,6 +13,7 @@ Es muss nichts installiert werden.
 
 - Jede richtige Aufgabe gibt **einen Punkt** ⭐.
 - Nach `3` richtigen Aufgaben geht es eine **Stufe** höher (🏆).
+- Alle `3` Stufen gibt es ein Leben zurück, wenn eins fehlt.
 - Die Zahlen gehen **nie über 100** und **nie unter 0**.
 - Alle Aufgaben sind zufällig – am Anfang trotzdem ganz leicht.
 
@@ -20,11 +21,17 @@ Es muss nichts installiert werden.
 
 | Ab Stufe | Neu |
 |----------|-----|
-| 1        | Plus mit kleinen Zahlen (z. B. `10 + 0`, `10 + 5`) |
-| 3        | **Minus bis 10** (z. B. `8 − 3`, `10 − 6`) |
-| 4        | Plus und Minus mit größeren Zahlen (z. B. `13 − 7`, `9 + 17`) |
-| 8        | **Zahlenreihen** (z. B. `2, 4, 6, 8, 10, 12, ?`) |
-| 15       | **Drei Zahlen** (z. B. `3 + 9 + 14`, `17 − 3 − 7`) |
+| 1        | Plus bis 5 (z. B. `3 + 2`) |
+| 2        | Plus bis 10 (z. B. `6 + 3`) |
+| 3        | **Verliebte Zahlen** zur 10 (z. B. `7 + ? = 10`) |
+| 4        | **Minus bis 10** (z. B. `8 − 3`, `10 − 6`) |
+| 5        | Plus und Minus gemischt bis 10 |
+| 6        | Plus bis 20 |
+| 7        | Minus bis 20 |
+| 8        | Plus und Minus gemischt bis 20 |
+| 9        | Zehnerfreunde wiederholen, gemischt mit normalen Aufgaben |
+| 12       | **Zahlenreihen** als Extra-Herausforderung |
+| 17       | **Drei Zahlen** als Extra-Herausforderung |
 
 ### Anschauung mit Würfeln
 
@@ -49,10 +56,12 @@ Alles oben in **`game.js`** einstellbar:
 
 ```js
 const CORRECT_PER_LEVEL = 3;   // richtige Aufgaben pro Stufe
-const SUB_FROM_LEVEL    = 3;   // ab hier Minus
-const SEQ_FROM_LEVEL    = 8;   // ab hier Zahlenreihen
-const TRIPLE_FROM_LEVEL = 15;  // ab hier drei Zahlen
-const MAX_BY_LEVEL = [10,12,10,20,30,40,50,50,60,70,80,90,100,100,100];
+const BOND_TO_TEN_LEVEL = 3;   // verliebte Zahlen
+const SUB_FROM_LEVEL    = 4;   // ab hier Minus
+const SEQ_FROM_LEVEL    = 12;  // ab hier Zahlenreihen
+const TRIPLE_FROM_LEVEL = 17;  // ab hier drei Zahlen
+const LIFE_EVERY        = 3;   // alle 3 Stufen ein Leben zurück
+const MAX_BY_LEVEL = [5,10,10,10,10,20,20,20,20,30,40,50,50,60,70,80,90,100,100,100];
 ```
 
 Zum schnellen Ausprobieren einer Stufe: `index.html?stufe=8` öffnen
